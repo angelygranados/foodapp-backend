@@ -1,11 +1,41 @@
 {
   "name": "foodapp-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for FoodApp",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "DEBUG=app:* nodemon index",
+    "start": "NODE_ENV=production node index"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Angely Granados",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angelygranados/to_do_app_backend/issues"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.0"
+  }
 }
