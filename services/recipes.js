@@ -8,12 +8,15 @@ class RecipesService {
 
   async getRecipes() {
     const recipes = await this.mongoDB.getAll(this.collection);
+    recipes.forEach(recipe => {
+        recipe.ingredients = recipe.ingredients.length
+    });
     return recipes || [];
   }
 
   async getRecipe({ recipeId }) {
     const recipe = await this.mongoDB.get(this.collection, recipeId);
-    return recipe || {};
+    return recipe || null;
   }
 
   async createRecipe({ recipe }) {
