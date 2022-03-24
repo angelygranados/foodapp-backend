@@ -1,4 +1,7 @@
 const MongoLib = require("../lib/mongo");
+const ValidationHelper = require("../helpers/validationHelper");
+
+const helper = new ValidationHelper();
 
 class RecipesService {
   constructor() {
@@ -21,17 +24,13 @@ class RecipesService {
 
   async createRecipe({ recipe }) {
     const ingredients = await this.mongoDB.getAll("ingredients");
-    const invalidIngredients = [];
-    recipe.ingredients.forEach(ingredient => {
-      if(!ingredients.some(i=> ingredient.id == i._id)) invalidIngredients.push(ingredient.id)
-    })
+    const invalidIngredients = helper.validateIngredients(ingredients, recipe);
     if(invalidIngredients.length == 0) {
       const createdRecipeId = await this.mongoDB.create(this.collection, recipe);
       return JSON.stringify(createdRecipeId);
     } else {
       return invalidIngredients;
     }
-    
   }
 
   async updateRecipe({ recipeId, recipe } = {}) {
