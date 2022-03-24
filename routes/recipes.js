@@ -1,13 +1,11 @@
 const express = require("express");
 const RecipesService = require("../services/recipes.js");
-const IngredientsService = require("../services/ingredients.js");
 
 function recipesApi(app) {
   const router = express.Router();
   app.use("/api", router);
 
   const recipesService = new RecipesService();
-  //const ingredientsService = new IngredientsService();
 
   router.get("/recipes/", async function (req, res, next) {
     try {
@@ -48,11 +46,18 @@ function recipesApi(app) {
   router.post("/recipes/", async function (req, res, next) {
     const { body: recipe } = req;
     try {
-      const createRecipeId = await recipesService.createRecipe({ recipe });
-      res.status(201).json({
-        data: createRecipeId,
-        message: "Recipe created",
-      });
+      const createResponse = await recipesService.createRecipe({ recipe });
+      if(typeof createResponse == "object") {
+        res.status(400).json({
+          error: "Bad Request",
+          message: "Some ingredients were not found " + createResponse
+        })
+      } else {
+        res.status(201).json({
+          data: createResponse,
+          message: "Recipe created",
+        });
+      }
     } catch (err) {
       next(err);
     }

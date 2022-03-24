@@ -20,8 +20,18 @@ class RecipesService {
   }
 
   async createRecipe({ recipe }) {
-    const createdRecipeId = await this.mongoDB.create(this.collection, recipe);
-    return createdRecipeId;
+    const ingredients = await this.mongoDB.getAll("ingredients");
+    const invalidIngredients = [];
+    recipe.ingredients.forEach(ingredient => {
+      if(!ingredients.some(i=> ingredient.id == i._id)) invalidIngredients.push(ingredient.id)
+    })
+    if(invalidIngredients.length == 0) {
+      const createdRecipeId = await this.mongoDB.create(this.collection, recipe);
+      return JSON.stringify(createdRecipeId);
+    } else {
+      return invalidIngredients;
+    }
+    
   }
 
   async updateRecipe({ recipeId, recipe } = {}) {
